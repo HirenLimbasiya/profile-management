@@ -1,9 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useGlobalContext } from "../../context/GlobalContext";
 
 const Header: React.FC = () => {
+  const { formState } = useGlobalContext();
+  const profileName = `${formState.firstName} ${formState.lastName}`;
   return (
     <header>
+      {profileName}
       <nav>
         <ul>
           <li>

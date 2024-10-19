@@ -6,21 +6,16 @@ import { validateProfileForm } from "../../utils/validation";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 import Loader from "../Loader";
+import { useGlobalContext } from "../../context/GlobalContext";
 
-// Define a common type for loading and error state
 type LoadingErrorState = {
   loading: boolean;
-  error: boolean; // Change error to boolean
+  error: boolean;
 };
 
 const ProfileFormComponent: React.FC = () => {
   // State for form data
-  const [formState, setFormState] = useState<ProfileForm>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    age: "",
-  });
+  const { formState, setFormState } = useGlobalContext();
 
   // State for fetching data
   const [fetchState, setFetchState] = useState<LoadingErrorState>({
@@ -35,7 +30,6 @@ const ProfileFormComponent: React.FC = () => {
   });
   const navigate = useNavigate();
 
-  // State for individual field errors
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<keyof ProfileForm, string>>
   >({});
