@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Home",
+    "path": "/"
+  },
+  {
+    "name": "Profile",
+    "path": "/profile"
+  },
+  {
+    "name": "Profile Form",
+    "path": "/profile-form"
+  }
+]

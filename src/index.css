@@ -12,6 +12,38 @@ code {
     monospace;
 }
 
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-bg: #ffffff; /* Pure white background for light mode */
+  --color-text: #1a1a1a; /* Almost black for text */
+  --color-primary: #000000; /* Pure black for primary actions */
+  --color-secondary: #555555; /* Medium gray for secondary elements */
+  --color-accent: #333333; /* Darker gray for accent elements */
+  --color-muted: #888888; /* Light gray for muted text */
+  --color-highlight: #000000; /* Black for highlights */
+  --color-error: #ff0000; /* Red for errors */
+  --color-success: #008000; /* Green for success */
+  --color-warning: #ffcc00; /* Yellow for warnings */
+}
+
+/* Dark Mode */
+.dark {
+  --color-bg: #1a1a1a; /* Almost black background for dark mode */
+  --color-text: #f5f5f5; /* Light gray for text in dark mode */
+  --color-primary: #ffffff; /* White for primary actions */
+  --color-secondary: #cccccc; /* Light gray for secondary elements */
+  --color-accent: #aaaaaa; /* Muted gray for accents */
+  --color-muted: #999999; /* Medium gray for muted text */
+  --color-highlight: #ffffff; /* White for highlights */
+  --color-error: #ff6b6b; /* Soft red for errors */
+  --color-success: #00e676; /* Lighter green for success */
+  --color-warning: #ffd700; /* Gold for warnings */
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
