@@ -12,6 +12,7 @@ import {
   setProfileToLocalStorage,
   removeProfileFromLocalStorage,
 } from "../utils/localStorageUtils";
+import { useToast } from "./ToastContext";
 
 // Define the context type
 interface GlobalContextType {
@@ -58,6 +59,7 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     loading: false,
     error: false,
   });
+  const { showSuccessToast, showErrorToast } = useToast();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -90,9 +92,11 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
       setFormState(newProfile);
       setSaveState({ loading: false, error: false });
       setProfileToLocalStorage(newProfile);
+      showSuccessToast("Profile update successfully");
       return true;
     } catch (error) {
       console.error("Error creating profile:", error);
+      showErrorToast("Profile update failed");
       setSaveState({ loading: false, error: true });
       return false;
     }
@@ -112,9 +116,11 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
       setFormState(deleteData); // Reset form state
       removeProfileFromLocalStorage();
       setDeleteState({ loading: false, error: false });
+      showSuccessToast("Profile delete successfully");
       return true;
     } catch (error) {
       console.error("Error deleting profile:", error);
+      showErrorToast("Couldn't delete profile");
       setDeleteState({ loading: false, error: true }); // Set error state to true on failure
       return false;
     }

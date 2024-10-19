@@ -12,6 +12,7 @@ export const getProfile = async () => {
 
 export const saveProfile = async (profile: ProfileForm) => {
   await delay(1000);
+  // throw new Error(`Cannot save profile`);
   const response = await axiosInstance.put<ProfileForm>(PROFILE_URL, profile);
   return response.data;
 };

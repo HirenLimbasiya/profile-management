@@ -1,5 +1,6 @@
 import React from "react";
 import { useGlobalContext } from "../../context/GlobalContext";
+import { Link } from "react-router-dom"; // Import Link for navigation
 
 const ProfileView: React.FC = () => {
   const { fetchState, formState } = useGlobalContext();
@@ -29,6 +30,14 @@ const ProfileView: React.FC = () => {
       <div className="bg-muted rounded-lg shadow-xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6 text-primary">
           Profile Details
+          {!formState?.firstName && (
+            <span className="ml-3 text-xs">
+              don't have any profile.{" "}
+              <Link to="/profile-form" className="text-blue-500 underline">
+                Create a new
+              </Link>
+            </span>
+          )}
         </h2>
 
         <div className="flex justify-center mb-6">
