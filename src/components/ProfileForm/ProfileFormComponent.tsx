@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getProfile, saveProfile } from "../../api/profileService";
 import { ProfileForm } from "../../types/profile";
 import { validateProfileForm } from "../../utils/validation";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 import Loader from "../Loader";
-import Header from "../Header/Header";
-import { useNavigate } from "react-router-dom";
 
 // Define a common type for loading and error state
 type LoadingErrorState = {
@@ -110,7 +109,6 @@ const ProfileFormComponent: React.FC = () => {
 
   return (
     <div>
-      <Header />
       <h1>Profile Form</h1>
       <form onSubmit={handleSubmit}>
         <Input
