@@ -1,8 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom"; // Using NavLink for active link styles
 import { useGlobalContext } from "../../context/GlobalContext";
 import { useToggleTheme } from "../../hooks/useToggleTheme";
-import { Moon, Sun } from "lucide-react"; 
+import { Moon, Sun } from "lucide-react";
 import navLinks from "./navLinks.json";
 
 const Header: React.FC = () => {
@@ -11,7 +11,7 @@ const Header: React.FC = () => {
   const { isDarkMode, toggleTheme } = useToggleTheme();
 
   return (
-    <header className="bg-bg text-text shadow-md py-4 px-8 flex justify-between items-center">
+    <header className="bg-bg text-text shadow-sm py-4 px-8 flex justify-between items-center z-10">
       <h1 className="text-lg font-semibold">{profileName || "Welcome"}</h1>
 
       <div className="flex items-center space-x-6">
@@ -19,12 +19,16 @@ const Header: React.FC = () => {
           <ul className="flex space-x-6">
             {navLinks.map((link) => (
               <li key={link.name}>
-                <Link
+                <NavLink
                   to={link.path}
-                  className="text-primary hover:text-accent transition-colors"
+                  className={({ isActive }) =>
+                    `text-primary transition-colors pb-2 ${
+                      isActive ? "border-b-2 border-primary" : ""
+                    }`
+                  }
                 >
                   {link.name}
-                </Link>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -34,7 +38,7 @@ const Header: React.FC = () => {
           {isDarkMode ? (
             <Sun className="w-5 h-5" />
           ) : (
-            <Moon className="w-5 h-5" /> 
+            <Moon className="w-5 h-5" />
           )}
         </button>
       </div>
