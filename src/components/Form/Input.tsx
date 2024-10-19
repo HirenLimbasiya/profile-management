@@ -16,7 +16,7 @@ const Input: React.FC<InputProps> = ({ label, error, ...props }) => {
           className="block text-sm font-medium text-text mb-1" // Use text color from config
         >
           {label}
-          {!props.required && <span className="text-muted"> (Optional)</span>}
+          {!props.required && <span className=""> (Optional)</span>}
         </label>
       )}
       <input

@@ -2,64 +2,58 @@ import React from "react";
 import { useGlobalContext } from "../../context/GlobalContext";
 
 const ProfileView: React.FC = () => {
-  // const [profile, setProfile] = useState<ProfileForm | null>(null);
-  // const [state, setState] = useState<{ loading: boolean; error: boolean }>({
-  //   loading: true,
-  //   error: false,
-  // });
-
   const { fetchState, formState } = useGlobalContext();
-
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     setState({ loading: true, error: false });
-  //     try {
-  //       const profileData = await getProfile();
-  //       setProfile(profileData);
-  //       setState({ loading: false, error: false });
-  //     } catch (err) {
-  //       console.error("Error fetching profile:", err);
-  //       setState({ loading: false, error: true });
-  //     }
-  //   };
-
-  //   fetchProfile();
-  // }, []);
 
   const getAvatarLetter = (name: string | undefined) => {
     return name ? name.charAt(0).toUpperCase() : "-";
   };
 
-  if (fetchState.loading) return <div>Loading...</div>;
-  if (fetchState.error) return <div>Error loading profile.</div>;
+  if (fetchState.loading) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-60px)] bg-bg text-text">
+        Loading...
+      </div>
+    );
+  }
+
+  if (fetchState.error) {
+    return (
+      <div className="flex justify-center items-center h-[calc(100vh-60px)] bg-bg text-text">
+        Error loading profile.
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h2>Profile Details</h2>
+    <div className="flex justify-center items-center h-[calc(100vh-60px)] bg-bg text-text">
+      <div className="bg-muted rounded-lg shadow-xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-primary">
+          Profile Details
+        </h2>
 
-      <div style={styles.avatar}>{getAvatarLetter(formState?.firstName)}</div>
+        <div className="flex justify-center mb-6">
+          <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-bg text-3xl font-bold border-4 border-bg transition-transform duration-300 hover:scale-105">
+            {getAvatarLetter(formState?.firstName)}
+          </div>
+        </div>
 
-      <p>First Name: {formState?.firstName || "-"}</p>
-      <p>Last Name: {formState?.lastName || "-"}</p>
-      <p>Email: {formState?.email || "-"}</p>
-      <p>Age: {formState?.age || "-"}</p>
+        {/* Enhanced Styling for Labels and Values */}
+        <div className="space-y-3">
+          {renderDetail("First Name", formState?.firstName)}
+          {renderDetail("Last Name", formState?.lastName)}
+          {renderDetail("Email", formState?.email)}
+          {renderDetail("Age", formState?.age)}
+        </div>
+      </div>
     </div>
   );
 };
 
-const styles = {
-  avatar: {
-    width: "50px",
-    height: "50px",
-    borderRadius: "50%",
-    backgroundColor: "#007bff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "20px",
-    color: "#fff",
-    marginBottom: "10px",
-  },
-};
+const renderDetail = (label: string, value: string | number | undefined) => (
+  <div className="flex justify-between items-center border-b border-muted pb-2">
+    <span className="font-semibold text-base text-secondary">{label}:</span>
+    <span className="text-base text-accent">{value || "-"}</span>
+  </div>
+);
 
 export default ProfileView;

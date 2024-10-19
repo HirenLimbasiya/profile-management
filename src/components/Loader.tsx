@@ -1,5 +1,3 @@
-// src/components/Loader.tsx
-
 import React from "react";
 
 interface LoaderProps {
@@ -7,16 +5,20 @@ interface LoaderProps {
 }
 
 const Loader: React.FC<LoaderProps> = ({ size = 50 }) => {
-  const loaderStyle = {
-    width: size,
-    height: size,
-    border: "5px solid #f3f3f3", // Light grey
-    borderTop: "5px solid #3498db", // Blue
-    borderRadius: "50%",
-    animation: "spin 1s linear infinite",
-  };
+  // Calculate the border size as a percentage of the loader size
+  const borderSize = size * 0.1; // 10% of the loader size
 
-  return <div style={loaderStyle} />;
+  return (
+    <div
+      className={`rounded-full animate-spin`}
+      style={{
+        width: size,
+        height: size,
+        border: `${borderSize}px solid var(--color-muted)`, // Light grey for light mode
+        borderTop: `${borderSize}px solid var(--color-primary)`, // Blue for light mode
+      }}
+    />
+  );
 };
 
 export default Loader;

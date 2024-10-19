@@ -4,11 +4,11 @@
     "path": "/"
   },
   {
-    "name": "Profile",
-    "path": "/profile"
+    "name": "Form",
+    "path": "/profile-form"
   },
   {
-    "name": "Profile Form",
-    "path": "/profile-form"
+    "name": "Profile",
+    "path": "/profile"
   }
 ]

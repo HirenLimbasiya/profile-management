@@ -65,7 +65,7 @@ const ProfileFormComponent: React.FC = () => {
   if (fetchState.loading) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-60px)] bg-bg text-text">
-        <Loader size={30} />
+        <Loader size={50} />
       </div>
     );
   }
@@ -82,6 +82,7 @@ const ProfileFormComponent: React.FC = () => {
             value={profileData.firstName}
             onChange={handleChange}
             error={fieldErrors.firstName}
+            placeholder="Enter your first name"
             required
           />
           <Input
@@ -91,6 +92,7 @@ const ProfileFormComponent: React.FC = () => {
             value={profileData.lastName}
             onChange={handleChange}
             error={fieldErrors.lastName}
+            placeholder="Enter your last name"
           />
           <Input
             id="email"
@@ -100,6 +102,7 @@ const ProfileFormComponent: React.FC = () => {
             value={profileData.email}
             onChange={handleChange}
             error={fieldErrors.email}
+            placeholder="Enter your email address"
             required
           />
           <Input
@@ -110,6 +113,8 @@ const ProfileFormComponent: React.FC = () => {
             value={profileData.age}
             onChange={handleChange}
             error={fieldErrors.age}
+            placeholder="Enter your age (optional)"
+            min={0}
           />
           <div className="flex justify-end space-x-4 mt-4">
             <Button
@@ -117,7 +122,7 @@ const ProfileFormComponent: React.FC = () => {
               disabled={saveState.loading || deleteState.loading}
             >
               {saveState.loading ? (
-                <Loader size={5} />
+                <Loader size={20} />
               ) : formState.firstName ? (
                 "Update"
               ) : (
@@ -132,7 +137,7 @@ const ProfileFormComponent: React.FC = () => {
                 variant="danger" // Set variant to danger for delete button
                 disabled={deleteState.loading || saveState.loading}
               >
-                {deleteState.loading ? <Loader size={5} /> : "Delete"}
+                {deleteState.loading ? <Loader size={20} /> : "Delete"}
               </Button>
             )}
           </div>
