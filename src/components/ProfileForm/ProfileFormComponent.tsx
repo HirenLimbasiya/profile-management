@@ -1,72 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getProfile, saveProfile } from "../../api/profileService";
+import { useGlobalContext } from "../../context/GlobalContext";
 import { ProfileForm } from "../../types/profile";
 import { validateProfileForm } from "../../utils/validation";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 import Loader from "../Loader";
-import { useGlobalContext } from "../../context/GlobalContext";
-
-type LoadingErrorState = {
-  loading: boolean;
-  error: boolean;
-};
 
 const ProfileFormComponent: React.FC = () => {
   // State for form data
-  const { formState, setFormState } = useGlobalContext();
+  const { formState, setFormState, saveState, createProfile, fetchState } =
+    useGlobalContext();
 
-  // State for fetching data
-  const [fetchState, setFetchState] = useState<LoadingErrorState>({
-    loading: true,
-    error: false,
-  });
-
-  // State for saving data
-  const [saveState, setSaveState] = useState<LoadingErrorState>({
-    loading: false,
-    error: false,
-  });
   const navigate = useNavigate();
 
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<keyof ProfileForm, string>>
   >({});
-
-  // Fetch profile data on component mount
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setFetchState({ loading: true, error: false }); // Reset fetching state
-      try {
-        const profileData = await getProfile();
-        setFormState(profileData);
-        setFetchState({ loading: false, error: false }); // Set loading and error to false after successful fetch
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-        setFetchState({ loading: false, error: true }); // Set error state to true on failure
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  // Handle profile creation
-  const handleProfileCreation = async () => {
-    setSaveState({ loading: true, error: false }); // Reset saving state
-    try {
-      const newProfile = await saveProfile(formState);
-      console.log("Profile created:", newProfile);
-      setFormState({ firstName: "", lastName: "", email: "", age: "" }); // Reset form
-      setSaveState({ loading: false, error: false }); // Set loading and error to false after successful save
-      navigate("/profile");
-    } catch (error) {
-      console.error("Error creating profile:", error);
-      setSaveState({ loading: false, error: true }); // Set error state to true on failure
-    }
-  };
-
-  // Handle input changes
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormState((prevState) => ({
@@ -80,16 +30,18 @@ const ProfileFormComponent: React.FC = () => {
   };
 
   // Handle form submission
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const validationResult = validateProfileForm(formState);
 
     if (!validationResult.isValid) {
       setFieldErrors(validationResult.errors); // Set individual field errors
-      setSaveState({ ...saveState, error: true }); // Set error state to true
       return; // Stop submission if there are validation errors
     }
-    handleProfileCreation();
+    const isSave = await createProfile();
+    if (isSave) {
+      navigate("/profile");
+    }
   };
 
   // Render loading states and error messages
