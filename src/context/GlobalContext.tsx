@@ -6,7 +6,12 @@ import React, {
   useEffect,
 } from "react";
 import { ProfileForm } from "../types/profile";
-import { getProfile, saveProfile } from "../api/profileService";
+import { getProfile, saveProfile } from "../api/profileService"; // Ensure you have deleteProfileFromAPI
+import {
+  getProfileFromLocalStorage,
+  setProfileToLocalStorage,
+  removeProfileFromLocalStorage,
+} from "../utils/localStorageUtils";
 
 // Define the context type
 interface GlobalContextType {
@@ -14,12 +19,16 @@ interface GlobalContextType {
   setFormState: React.Dispatch<React.SetStateAction<ProfileForm>>;
   fetchState: LoadingErrorState;
   saveState: LoadingErrorState;
-  createProfile: () => Promise<boolean>;
+  deleteState: LoadingErrorState; // New state for delete action
+  createProfile: (n: ProfileForm) => Promise<boolean>;
+  deleteProfile: () => Promise<boolean>;
 }
+
 type LoadingErrorState = {
   loading: boolean;
   error: boolean;
 };
+
 // Create the context with a default value of `null` for initialization
 const GlobalContext = createContext<GlobalContextType | null>(null);
 
@@ -44,41 +53,84 @@ export const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
     loading: false,
     error: false,
   });
+  const [deleteState, setDeleteState] = useState<LoadingErrorState>({
+    // New state for delete action
+    loading: false,
+    error: false,
+  });
 
   useEffect(() => {
     const fetchProfile = async () => {
       setFetchState({ loading: true, error: false }); // Reset fetching state
+      const profile = getProfileFromLocalStorage();
+      if (profile) {
+        setFormState(profile);
+        setFetchState({ loading: false, error: false });
+        return;
+      }
+
       try {
         const profileData = await getProfile();
         setFormState(profileData);
-        setFetchState({ loading: false, error: false }); // Set loading and error to false after successful fetch
+        setFetchState({ loading: false, error: false });
+        setProfileToLocalStorage(profileData);
       } catch (error) {
         console.error("Error fetching profile:", error);
-        setFetchState({ loading: false, error: true }); // Set error state to true on failure
+        setFetchState({ loading: false, error: true });
       }
     };
 
     fetchProfile();
   }, []);
 
-  const createProfile = async () => {
-    setSaveState({ loading: true, error: false }); // Reset saving state
+  const createProfile = async (newProfile: ProfileForm) => {
+    setSaveState({ loading: true, error: false });
     try {
-      await saveProfile(formState);
-      setFormState({ firstName: "", lastName: "", email: "", age: "" }); // Reset form
-      setSaveState({ loading: false, error: false }); // Set loading and error to false after successful save
-      // navigate("/profile");
-      return true
+      await saveProfile(newProfile);
+      setFormState(newProfile);
+      setSaveState({ loading: false, error: false });
+      setProfileToLocalStorage(newProfile);
+      return true;
     } catch (error) {
       console.error("Error creating profile:", error);
-      setSaveState({ loading: false, error: true }); // Set error state to true on failure
-      return false
+      setSaveState({ loading: false, error: true });
+      return false;
+    }
+  };
+
+  // Implement delete profile function
+  const deleteProfile = async () => {
+    const deleteData: ProfileForm = {
+      firstName: "",
+      lastName: "",
+      email: "",
+      age: "",
+    };
+    setDeleteState({ loading: true, error: false }); // Reset delete state
+    try {
+      await saveProfile(deleteData);
+      setFormState(deleteData); // Reset form state
+      removeProfileFromLocalStorage();
+      setDeleteState({ loading: false, error: false });
+      return true;
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      setDeleteState({ loading: false, error: true }); // Set error state to true on failure
+      return false;
     }
   };
 
   return (
     <GlobalContext.Provider
-      value={{ formState, setFormState, fetchState, saveState, createProfile }}
+      value={{
+        formState,
+        setFormState,
+        fetchState,
+        saveState,
+        deleteState,
+        createProfile,
+        deleteProfile,
+      }} // Include deleteState
     >
       {children}
     </GlobalContext.Provider>

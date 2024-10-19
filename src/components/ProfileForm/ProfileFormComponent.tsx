@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../context/GlobalContext";
 import { ProfileForm } from "../../types/profile";
@@ -8,49 +8,66 @@ import Input from "../Form/Input";
 import Loader from "../Loader";
 
 const ProfileFormComponent: React.FC = () => {
-  // State for form data
-  const { formState, setFormState, saveState, createProfile, fetchState } =
-    useGlobalContext();
+  const {
+    saveState,
+    createProfile,
+    deleteProfile,
+    fetchState,
+    deleteState,
+    formState,
+  } = useGlobalContext();
+  const [profileData, setProfileData] = useState<ProfileForm>(formState);
+
+  useEffect(() => {
+    setProfileData(formState);
+  }, [formState]);
 
   const navigate = useNavigate();
 
   const [fieldErrors, setFieldErrors] = useState<
     Partial<Record<keyof ProfileForm, string>>
   >({});
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setFormState((prevState) => ({
+    setProfileData((prevState) => ({
       ...prevState,
       [name]: name === "age" ? (value ? Number(value) : "") : value,
     }));
     setFieldErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: undefined, // Clear field error when user starts typing
+      [name]: undefined,
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const validationResult = validateProfileForm(formState);
+    const validationResult = validateProfileForm(profileData);
 
     if (!validationResult.isValid) {
-      setFieldErrors(validationResult.errors); // Set individual field errors
-      return; // Stop submission if there are validation errors
+      setFieldErrors(validationResult.errors);
+      return;
     }
-    const isSave = await createProfile();
+
+    const isSave = await createProfile(profileData);
     if (isSave) {
       navigate("/profile");
     }
   };
 
-  // Render loading states and error messages
+  const handleDelete = async () => {
+    const isDeleted = await deleteProfile(); // Call the delete profile function
+    if (isDeleted) {
+      navigate("/profile"); // Redirect after deletion
+    }
+  };
+
   if (fetchState.loading) {
     return (
       <div>
         <Loader size={30} />
       </div>
-    ); // Loader while fetching
+    );
   }
 
   return (
@@ -61,27 +78,27 @@ const ProfileFormComponent: React.FC = () => {
           id="first-name"
           label="First Name"
           name="firstName"
-          value={formState.firstName}
+          value={profileData.firstName}
           onChange={handleChange}
-          error={fieldErrors.firstName} // Individual error for first name
+          error={fieldErrors.firstName}
           required
         />
         <Input
           id="last-name"
           label="Last Name"
           name="lastName"
-          value={formState.lastName}
+          value={profileData.lastName}
           onChange={handleChange}
-          error={fieldErrors.lastName} // Individual error for last name
+          error={fieldErrors.lastName}
         />
         <Input
           id="email"
           label="Email"
           type="email"
           name="email"
-          value={formState.email}
+          value={profileData.email}
           onChange={handleChange}
-          error={fieldErrors.email} // Individual error for email
+          error={fieldErrors.email}
           required
         />
         <Input
@@ -89,16 +106,29 @@ const ProfileFormComponent: React.FC = () => {
           label="Age"
           type="number"
           name="age"
-          value={formState.age}
+          value={profileData.age}
           onChange={handleChange}
-          error={fieldErrors.age} // Individual error for age
+          error={fieldErrors.age}
         />
-        <Button type="submit" disabled={saveState.loading}>
-          {" "}
-          {/* Disable button while saving */}
-          {saveState.loading ? <Loader size={5} /> : "Submit"}{" "}
-          {/* Show loading text on button */}
+        <Button type="submit" disabled={saveState.loading || deleteState.loading}>
+          {saveState.loading ? (
+            <Loader size={5} />
+          ) : formState.firstName ? (
+            "Update"
+          ) : (
+            "Submit"
+          )}
         </Button>
+
+        {formState.firstName && (
+          <Button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleteState.loading || saveState.loading}
+          >
+            {deleteState.loading ? <Loader size={5} /> : "Delete"}{" "}
+          </Button>
+        )}
       </form>
     </div>
   );
