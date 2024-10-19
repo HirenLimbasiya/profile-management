@@ -23,7 +23,7 @@ code {
   --color-primary: #000000; /* Pure black for primary actions */
   --color-secondary: #555555; /* Medium gray for secondary elements */
   --color-accent: #333333; /* Darker gray for accent elements */
-  --color-muted: #888888; /* Light gray for muted text */
+  --color-muted: #ffffff; /* Light gray for muted text */
   --color-highlight: #000000; /* Black for highlights */
   --color-error: #ff0000; /* Red for errors */
   --color-success: #008000; /* Green for success */
@@ -37,7 +37,7 @@ code {
   --color-primary: #ffffff; /* White for primary actions */
   --color-secondary: #cccccc; /* Light gray for secondary elements */
   --color-accent: #aaaaaa; /* Muted gray for accents */
-  --color-muted: #999999; /* Medium gray for muted text */
+  --color-muted: #2b2b2b; /* Medium gray for muted text */
   --color-highlight: #ffffff; /* White for highlights */
   --color-error: #ff6b6b; /* Soft red for errors */
   --color-success: #00e676; /* Lighter green for success */
