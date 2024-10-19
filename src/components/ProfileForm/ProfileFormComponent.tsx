@@ -5,6 +5,8 @@ import { validateProfileForm } from "../../utils/validation";
 import Button from "../Form/Button";
 import Input from "../Form/Input";
 import Loader from "../Loader";
+import Header from "../Header/Header";
+import { useNavigate } from "react-router-dom";
 
 // Define a common type for loading and error state
 type LoadingErrorState = {
@@ -32,6 +34,7 @@ const ProfileFormComponent: React.FC = () => {
     loading: false,
     error: false,
   });
+  const navigate = useNavigate();
 
   // State for individual field errors
   const [fieldErrors, setFieldErrors] = useState<
@@ -45,11 +48,10 @@ const ProfileFormComponent: React.FC = () => {
       try {
         const profileData = await getProfile();
         setFormState(profileData);
+        setFetchState({ loading: false, error: false }); // Set loading and error to false after successful fetch
       } catch (error) {
         console.error("Error fetching profile:", error);
         setFetchState({ loading: false, error: true }); // Set error state to true on failure
-      } finally {
-        setFetchState((prev) => ({ ...prev, loading: false })); // Stop loading
       }
     };
 
@@ -63,11 +65,11 @@ const ProfileFormComponent: React.FC = () => {
       const newProfile = await saveProfile(formState);
       console.log("Profile created:", newProfile);
       setFormState({ firstName: "", lastName: "", email: "", age: "" }); // Reset form
+      setSaveState({ loading: false, error: false }); // Set loading and error to false after successful save
+      navigate("/profile");
     } catch (error) {
       console.error("Error creating profile:", error);
       setSaveState({ loading: false, error: true }); // Set error state to true on failure
-    } finally {
-      setSaveState((prev) => ({ ...prev, loading: false })); // Stop loading
     }
   };
 
@@ -108,6 +110,7 @@ const ProfileFormComponent: React.FC = () => {
 
   return (
     <div>
+      <Header />
       <h1>Profile Form</h1>
       <form onSubmit={handleSubmit}>
         <Input
