@@ -2,17 +2,31 @@ import { ProfileForm } from "../types/profile";
 import delay from "../utils/helper";
 import axiosInstance from "./index";
 
-const PROFILE_URL = "/profile"; // The endpoint for the single profile
+const PROFILE_URL = "/profile";
+
+const isDevelopment = process.env.REACT_APP_ENV === "development";
 
 export const getProfile = async () => {
-  await delay(1000)
-  const response = await axiosInstance.get<ProfileForm>(PROFILE_URL);
-  return response.data;
+  await delay(1000);
+  if (isDevelopment) {
+    const response = await axiosInstance.get<ProfileForm>(PROFILE_URL);
+    return response.data;
+  } else {
+    return {
+      firstName: "",
+      lastName: "",
+      email: "",
+      age: "",
+    } as ProfileForm;
+  }
 };
 
 export const saveProfile = async (profile: ProfileForm) => {
   await delay(1000);
-  // throw new Error(`Cannot save profile`);
-  const response = await axiosInstance.put<ProfileForm>(PROFILE_URL, profile);
-  return response.data;
+  if (isDevelopment) {
+    const response = await axiosInstance.put<ProfileForm>(PROFILE_URL, profile);
+    return response.data;
+  } else {
+    return profile;
+  }
 };

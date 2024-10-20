@@ -20,7 +20,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "json-server": "json-server --watch db.json --port 8080"
+    "server": "json-server --watch db.json --port 8080",
+    "dev": "REACT_APP_ENV=development react-scripts start",
+    "prod": "REACT_APP_ENV=production react-scripts build"
   },
   "eslintConfig": {
     "extends": [
