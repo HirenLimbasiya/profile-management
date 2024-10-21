@@ -32,15 +32,17 @@ The project also includes features like **local storage** for persistence and a 
    ```bash
    cd profile-management
    ```
-3. Install the dependencies:
+3. Create .env file:
+   
+4. Install the dependencies:
    ```bash
    npm install
    ```
-4. Start the JSON-server to simulate the backend:
+5. Start the JSON-server to simulate the backend:
    ```bash
    npm run server
    ```
-5. In another terminal, start the React development server:
+6. In another terminal, start the React development server:
    ```bash
    npm run dev
    ```
